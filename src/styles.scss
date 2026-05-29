@@ -1,17 +1,20 @@
 /* SynapseQE Global Styles */
 
 :root {
-  --bg-color: #0b0f19;
-  --surface-color: rgba(255, 255, 255, 0.05);
-  --border-color: rgba(255, 255, 255, 0.1);
-  --text-primary: #e2e8f0;
+  --bg-color: #0f172a;
+  --surface-color: rgba(30, 41, 59, 0.7);
+  --surface-card: #1e293b;
+  --border-color: #334155;
+  --text-primary: #f8fafc;
   --text-secondary: #94a3b8;
   
   --color-pass: #10b981;
-  --color-fail: #ef4444;
-  --color-accent: #6366f1;
+  --color-fail: #f43f5e;
+  --color-accent: #818cf8;
+  --color-batches: #06b6d4;
   
-  --glass-blur: blur(12px);
+  --glass-blur: blur(16px);
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 * {
@@ -23,15 +26,17 @@
 body {
   background-color: var(--bg-color);
   color: var(--text-primary);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   -webkit-font-smoothing: antialiased;
   min-height: 100vh;
+  line-height: 1.5;
 }
 
 h1, h2, h3, h4, .tech-font {
-  font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
-  letter-spacing: -0.02em;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  letter-spacing: -0.01em;
+  font-weight: 700;
 }
 
 .glass-card {
@@ -39,7 +44,9 @@ h1, h2, h3, h4, .tech-font {
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
   border: 1px solid var(--border-color);
-  border-radius: 12px;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transition: all 0.2s var(--ease-standard);
 }
 
 .badge {
