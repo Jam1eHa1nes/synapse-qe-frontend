@@ -55,21 +55,6 @@ import { ExecutionMetricsComponent } from '../widgets/execution-metrics.componen
                   <app-execution-metrics *ngIf="widget === 'metrics'" [run]="run()"></app-execution-metrics>
                 </div>
               </div>
-
-              <div class="batches-timeline">
-                <h2 class="tech-font">EXECUTION TIMELINE</h2>
-                <div class="timeline">
-                  <div *ngFor="let batch of run()?.batches" class="timeline-item glass-card">
-                    <div class="batch-head">
-                      <span class="batch-id tech-font">{{ batch.batchId }}</span>
-                      <span class="duration">{{ (batch.durationMs / 1000).toFixed(2) }}s</span>
-                    </div>
-                    <div class="batch-stats">
-                      {{ batch.testCases.length }} Test Cases
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
 
             <div *ngIf="activeTab === 'cases'" class="tab-pane cases-pane anim-fade-in">
