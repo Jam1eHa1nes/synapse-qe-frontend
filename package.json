@@ -18,7 +18,9 @@
     "@angular/forms": "^21.2.0",
     "@angular/platform-browser": "^21.2.0",
     "@angular/router": "^21.2.0",
+    "@neondatabase/auth": "^0.3.0-beta",
     "apexcharts": "^5.13.0",
+    "better-auth": "^1.6.11",
     "ng-apexcharts": "^2.4.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
