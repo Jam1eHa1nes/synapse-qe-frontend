@@ -1,3 +1,11 @@
+export interface TestStep {
+  name: string;
+  status: 'PASS' | 'FAIL';
+  durationMs: number;
+  errorMessage?: string;
+  timestamp: number;
+}
+
 export interface TestCase {
   suiteName: string;
   caseName: string;
@@ -5,6 +13,7 @@ export interface TestCase {
   errorMessage?: string;
   rawStackTrace?: string;
   errorFingerprint?: string;
+  steps: TestStep[];
 }
 
 export interface ExecutionBatch {

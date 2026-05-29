@@ -121,12 +121,36 @@ import { Subscription } from 'rxjs';
         </header>
 
         <div class="panel-tabs">
+          <button (click)="activePanelTab = 'steps'" [class.active]="activePanelTab === 'steps'">STEPS</button>
           <button (click)="activePanelTab = 'details'" [class.active]="activePanelTab === 'details'">DETAILS</button>
           <button (click)="activePanelTab = 'retries'" [class.active]="activePanelTab === 'retries'">RETRIES</button>
           <button (click)="activePanelTab = 'history'" [class.active]="activePanelTab === 'history'">HISTORY</button>
         </div>
 
         <div class="panel-content">
+          <div *ngIf="activePanelTab === 'steps'" class="panel-pane anim-fade-in">
+            <div class="steps-timeline" *ngIf="inspectedTestCase()?.steps?.length; else noSteps">
+              <div *ngFor="let step of inspectedTestCase()?.steps" class="step-item">
+                <div class="step-indicator" [class.pass]="step.status === 'PASS'" [class.fail]="step.status === 'FAIL'">
+                  <span class="dot"></span>
+                  <span class="line"></span>
+                </div>
+                <div class="step-content">
+                  <div class="step-header">
+                    <span class="step-name">{{ step.name }}</span>
+                    <span class="step-duration">{{ step.durationMs }}ms</span>
+                  </div>
+                  <div class="step-error" *ngIf="step.errorMessage">{{ step.errorMessage }}</div>
+                </div>
+              </div>
+            </div>
+            <ng-template #noSteps>
+              <div class="empty-panel-state">
+                <p>No granular steps recorded for this test.</p>
+              </div>
+            </ng-template>
+          </div>
+
           <div *ngIf="activePanelTab === 'details'" class="panel-pane anim-fade-in">
             <div class="error-block" *ngIf="inspectedTestCase()?.errorMessage">
               <label class="tech-font">ERROR MESSAGE</label>
@@ -184,6 +208,23 @@ import { Subscription } from 'rxjs';
     .panel-tabs button { flex: 1; padding: 1rem; background: none; border: none; color: var(--text-secondary); font-size: 0.7rem; }
     .panel-tabs button.active { color: var(--color-accent); border-bottom: 2px solid var(--color-accent); }
     .panel-content { flex: 1; overflow-y: auto; padding: 1.5rem; }
+    
+    .steps-timeline { display: flex; flex-direction: column; gap: 0; }
+    .step-item { display: flex; gap: 1rem; min-height: 50px; }
+    .step-indicator { display: flex; flex-direction: column; align-items: center; width: 20px; }
+    .step-indicator .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--text-secondary); margin-top: 6px; z-index: 1; }
+    .step-indicator .line { flex: 1; width: 2px; background: rgba(255,255,255,0.1); margin: 2px 0; }
+    .step-item:last-child .step-indicator .line { display: none; }
+    
+    .step-indicator.pass .dot { background: var(--color-pass); box-shadow: 0 0 8px var(--color-pass); }
+    .step-indicator.fail .dot { background: var(--color-fail); box-shadow: 0 0 8px var(--color-fail); }
+    
+    .step-content { flex: 1; padding-bottom: 1.5rem; }
+    .step-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+    .step-name { font-size: 0.85rem; color: var(--text-primary); }
+    .step-duration { font-size: 0.7rem; color: var(--text-secondary); }
+    .step-error { font-size: 0.75rem; color: var(--color-fail); background: rgba(239, 68, 68, 0.1); padding: 0.5rem; border-radius: 4px; margin-top: 0.5rem; }
+
     .stack-trace { background: #020617; padding: 1rem; border-radius: 8px; font-size: 0.75rem; overflow-x: auto; }
     .history-item { display: flex; gap: 1rem; align-items: center; padding: 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.05); }
     .stats-overview { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 3rem; }
@@ -201,7 +242,7 @@ export class ReportComponent implements OnInit, OnDestroy {
   inspectedTestCase = signal<TestCase | null>(null);
   testCaseHistory = signal<TestCaseHistory[]>([]);
   activeTab: 'summary' | 'failures' | 'history' = 'summary';
-  activePanelTab: 'details' | 'retries' | 'history' = 'details';
+  activePanelTab: 'steps' | 'details' | 'retries' | 'history' = 'steps';
   private sub?: Subscription;
   private streamSub?: Subscription;
 
@@ -243,7 +284,7 @@ export class ReportComponent implements OnInit, OnDestroy {
 
   inspectTestCase(testCase: TestCase) {
     this.inspectedTestCase.set(testCase);
-    this.activePanelTab = 'details';
+    this.activePanelTab = testCase.status === 'FAIL' ? 'details' : 'steps';
     const current = this.run();
     if (current) {
       this.liveFeedService.getTestCaseHistory(testCase.suiteName, testCase.caseName, current.environment)
