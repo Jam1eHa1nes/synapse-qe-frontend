@@ -1,6 +1,7 @@
 import { Injectable, NgZone } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 import { LiveUpdate } from '../models/live-update.model';
 import { TestRun } from '../models/test-case.model';
 
@@ -14,7 +15,7 @@ export interface TestCaseHistory {
   providedIn: 'root'
 })
 export class LiveFeedService {
-  private baseApiUrl = 'http://localhost:8080/api/v1';
+  private baseApiUrl = environment.apiUrl;
 
   constructor(private ngZone: NgZone, private http: HttpClient) {}
 
