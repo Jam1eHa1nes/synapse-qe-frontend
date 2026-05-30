@@ -1,12 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, CommonModule],
   template: `
-    <nav class="nav-bar glass-card">
+    <nav *ngIf="authService.user()" class="nav-bar glass-card">
       <div class="nav-links">
         <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="tech-font">LIVE DASHBOARD</a>
       </div>
@@ -74,4 +76,6 @@ import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
     }
   `]
 })
-export class AppComponent {}
+export class AppComponent {
+  authService = inject(AuthService);
+}
